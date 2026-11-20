@@ -11,7 +11,7 @@
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        body {1
+        body {
             background-color: #f4f7f6;
             color: #333;
             padding: 20px;
@@ -73,24 +73,23 @@
             cursor: pointer;
             font-weight: bold;
             margin-top: 10px;
-            transition: all 0.3s ease-in-out; /* গ্লো ইফেক্টের জন্য ট্রানজিশন */
+            transition: all 0.3s ease-in-out;
         }
         
         #saveBtn:hover {
             background-color: #27ae60;
         }
 
-        /* ক্লিক করলে যে গ্লো ইফেক্টটা হবে */
         .glow-effect {
             background-color: #2ecc71 !important;
             box-shadow: 0 0 20px #2ecc71, 0 0 40px #2ecc71 !important;
-            transform: scale(1.02); /* বাটনটা একটু বড় হবে */
+            transform: scale(1.02);
         }
         
         /* নোট কার্ডের ডিজাইন */
         .notes-title {
             margin-bottom: 15px;
-            : #2c3e50;
+            color: #2c3e50;
             border-bottom: 2px solid #bdc3c7;
             padding-bottom: 5px;
         }
@@ -170,7 +169,6 @@
                 <textarea id="noteArea" placeholder="এখানে তোমার পড়া বা নোট লিখে রাখো কাকিনো..."></textarea>
             </div>
 
-            <!-- বাটনে আইডি দিয়ে রাখা হলো -->
             <button id="saveBtn" onclick="saveNote()">নোট সেভ করো</button>
         </div>
 
@@ -208,12 +206,11 @@
                 return;
             }
 
-            // --- গ্লো ইফেক্টের কোড ---
-            saveBtn.classList.add("glow-effect"); // গ্লো ক্লাস যোগ করা
+            // গ্লো ইফেক্ট
+            saveBtn.classList.add("glow-effect");
             setTimeout(() => {
-                saveBtn.classList.remove("glow-effect"); // 500 মিলি সেকেন্ড পর গ্লো সরিয়ে নেওয়া
+                saveBtn.classList.remove("glow-effect");
             }, 300);
-            // -------------------------
 
             let newNote = {
                 id: Date.now(),
@@ -224,12 +221,17 @@
 
             let notes = JSON.parse(localStorage.getItem("kakinoAllNotes")) || [];
             notes.unshift(newNote);
+            
+            // লোকাল স্টোরেজে সেভ
             localStorage.setItem("kakinoAllNotes", JSON.stringify(notes));
+
+            // App Inventor-এর WebViewer-এ ডেটা পাঠানোর জন্য (এটি অ্যাপ ইনভেন্টরে কাজে লাগবে)
+            if (window.AppInventor) {
+                window.AppInventor.setWebViewString(JSON.stringify(notes));
+            }
 
             document.getElementById("noteArea").value = "";
             setTodayDate();
-
-            // স্ক্রিনে নোটগুলো রিফ্রেশ করা (একটু দেরিতে করলে গ্লোটা আরও ভালো বোঝা যায়, তবে এখানেই ঠিক আছে)
             displayNotes();
         }
 
@@ -269,6 +271,11 @@
                 let notes = JSON.parse(localStorage.getItem("kakinoAllNotes")) || [];
                 let updatedNotes = notes.filter(note => note.id !== id);
                 localStorage.setItem("kakinoAllNotes", JSON.stringify(updatedNotes));
+                
+                if (window.AppInventor) {
+                    window.AppInventor.setWebViewString(JSON.stringify(updatedNotes));
+                }
+                
                 displayNotes();
             }
         }
