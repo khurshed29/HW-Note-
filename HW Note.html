@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমার স্মার্ট নোট অ্যাপ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {1
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
+            padding-bottom: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .input-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+            font-size: 14px;
+        }
+        select, input[type="date"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            background-color: #fafafa;
+        }
+        select:focus, input[type="date"]:focus, textarea:focus {
+            border-color: #3498db;
+            background-color: #fff;
+        }
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+        
+        /* সেভ বাটনের ডিজাইন */
+        #saveBtn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: all 0.3s ease-in-out; /* গ্লো ইফেক্টের জন্য ট্রানজিশন */
+        }
+        
+        #saveBtn:hover {
+            background-color: #27ae60;
+        }
+
+        /* ক্লিক করলে যে গ্লো ইফেক্টটা হবে */
+        .glow-effect {
+            background-color: #2ecc71 !important;
+            box-shadow: 0 0 20px #2ecc71, 0 0 40px #2ecc71 !important;
+            transform: scale(1.02); /* বাটনটা একটু বড় হবে */
+        }
+        
+        /* নোট কার্ডের ডিজাইন */
+        .notes-title {
+            margin-bottom: 15px;
+            : #2c3e50;
+            border-bottom: 2px solid #bdc3c7;
+            padding-bottom: 5px;
+        }
+        .note-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            border-left: 5px solid #3498db;
+            position: relative;
+        }
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+        .subject-name {
+            font-weight: bold;
+            color: #2980b9;
+            font-size: 15px;
+        }
+        .note-text {
+            font-size: 15px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            width: auto;
+            margin: 0;
+        }
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="input-card">
+            <h2>📝 HW Note</h2>
+            
+            <div class="form-group">
+                <label for="subject">সাবজেক্ট সিলেক্ট করো:</label>
+                <select id="subject">
+                    <option value="Bangla-1">১. বাংলা-১ </option>
+                    <option value="English-1">২. ইংরেজি-১ </option>
+                    <option value="Social Science">৩. সমাজবিজ্ঞান </option>
+                    <option value="Chemistry">৪. রসায়ন </option>
+                    <option value="Mathematics-1">৫. গণিত-১ </option>
+                    <option value="Engineering Drawing">৬. ইঞ্জিনিয়ারিং ড্রয়িং </option>
+                    <option value="Basic Environmental Eng">৭. বেসিক এনভায়রনমেন্টাল ইঞ্জি.</option>
+                    <option value="Basic Electricity">৮. বেসিক ইলেক্ট্রিসিটি </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="noteDate">তারিখ:</label>
+                <input type="date" id="noteDate">
+            </div>
+
+            <div class="form-group">
+                <label for="noteArea">নোট লিখো:</label>
+                <textarea id="noteArea" placeholder="এখানে তোমার পড়া বা নোট লিখে রাখো কাকিনো..."></textarea>
+            </div>
+
+            <!-- বাটনে আইডি দিয়ে রাখা হলো -->
+            <button id="saveBtn" onclick="saveNote()">নোট সেভ করো</button>
+        </div>
+
+        <h3 class="notes-title">📚 সেভ করা নোটসমূহ</h3>
+        <div id="notesContainer">
+            <!-- নোটগুলো এখানে দেখা যাবে -->
+        </div>
+    </div>
+
+    <script>
+        // আজকের তারিখটি ইনপুটে ডিফল্ট হিসেবে সেট করা
+        function setTodayDate() {
+            let today = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0');
+            let yyyy = today.getFullYear();
+            document.getElementById("noteDate").value = `${yyyy}-${mm}-${dd}`;
+        }
+
+        // পেজ লোড হলে নোটগুলো দেখাবে
+        window.onload = function() {
+            setTodayDate();
+            displayNotes();
+        };
+
+        // নোট সেভ করার ফাংশন
+        function saveNote() {
+            let subject = document.getElementById("subject").value;
+            let date = document.getElementById("noteDate").value;
+            let text = document.getElementById("noteArea").value;
+            let saveBtn = document.getElementById("saveBtn");
+
+            if (text.trim() === "") {
+                alert("আগে নোট কিছু লিখো তো!");
+                return;
+            }
+
+            // --- গ্লো ইফেক্টের কোড ---
+            saveBtn.classList.add("glow-effect"); // গ্লো ক্লাস যোগ করা
+            setTimeout(() => {
+                saveBtn.classList.remove("glow-effect"); // 500 মিলি সেকেন্ড পর গ্লো সরিয়ে নেওয়া
+            }, 300);
+            // -------------------------
+
+            let newNote = {
+                id: Date.now(),
+                subject: subject,
+                date: date,
+                text: text
+            };
+
+            let notes = JSON.parse(localStorage.getItem("kakinoAllNotes")) || [];
+            notes.unshift(newNote);
+            localStorage.setItem("kakinoAllNotes", JSON.stringify(notes));
+
+            document.getElementById("noteArea").value = "";
+            setTodayDate();
+
+            // স্ক্রিনে নোটগুলো রিফ্রেশ করা (একটু দেরিতে করলে গ্লোটা আরও ভালো বোঝা যায়, তবে এখানেই ঠিক আছে)
+            displayNotes();
+        }
+
+        // স্ক্রিনে নোটগুলো দেখানোর ফাংশন
+        function displayNotes() {
+            let notes = JSON.parse(localStorage.getItem("kakinoAllNotes")) || [];
+            let container = document.getElementById("notesContainer");
+            container.innerHTML = "";
+
+            if (notes.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>এখনো কোনো নোট সেভ করা হয়নি।</p>";
+                return;
+            }
+
+            notes.forEach(note => {
+                let card = document.createElement("div");
+                card.className = "note-card";
+                
+                let dateParts = note.date.split("-");
+                let formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+
+                card.innerHTML = `
+                    <div class="note-header">
+                        <span class="subject-name">${note.subject}</span>
+                        <span>📅 ${formattedDate}</span>
+                    </div>
+                    <div class="note-text">${note.text}</div>
+                    <button class="delete-btn" onclick="deleteNote(${note.id})">মুছুন</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // নোট ডিলিট করার ফাংশন
+        function deleteNote(id) {
+            if (confirm("মুইছা ফেলবা?")) {
+                let notes = JSON.parse(localStorage.getItem("kakinoAllNotes")) || [];
+                let updatedNotes = notes.filter(note => note.id !== id);
+                localStorage.setItem("kakinoAllNotes", JSON.stringify(updatedNotes));
+                displayNotes();
+            }
+        }
+    </script>
+
+</body>
+</html>
